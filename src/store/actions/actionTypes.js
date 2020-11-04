@@ -1,0 +1,11 @@
+
+export const UPDATE_CITAS ='UPDATE_CITAS'
+
+
+
+export const AUTH_SUCCESS='AUTH_SUCCESS'
+export const AUTH_FAIL='AUTH_FAIL'
+export const UPDATE_USER='UPDATE_USER'
+export const UPDATE_USER_LOGOUT='UPDATE_USER_LOGOUT'
+export const AUTH_START='AUTH_START'
+export const CLEAN_ERRORS='CLEAN_ERRORS'
