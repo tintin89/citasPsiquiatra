@@ -8,6 +8,13 @@ export const updateCitas = (citasList)=>{
     }
 }
 
+export const updateNetwork = (valor)=>{
+    return {
+        type:actionTypes.UPDATE_NETWORK,
+        isConnected:valor
+    }
+}
+
 export const getCitas= () => {
     return dispatch => {
         const citasRef = firebase.database().ref('Citas')
@@ -21,5 +28,18 @@ export const getCitas= () => {
 
             }
             ,error=>console.log(error))
+    }
+}
+
+export const onNetwork = ()=>{
+    return dispatch => {
+       const connectedRef = firebase.database().ref(".info/connected");
+        connectedRef.on("value", function (snap) {
+            if (snap.val() === true) {
+                dispatch(updateNetwork(true))
+            } else {
+                dispatch(updateNetwork(false))
+            }
+        });
     }
 }

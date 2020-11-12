@@ -24,6 +24,23 @@ export const authFail=(errorMensaje)=>{
     }
 }
 
+export const handleSpanishError=(codigo)=>{
+    return dispatch=>{
+        switch (codigo) {
+            case "auth/invalid-email":
+                return dispatch(authFail('El usuario debe ser un correo electrónico!'))
+            case "auth/user-not-found":
+                return dispatch(authFail('El usuario no fue encontrado en el sistema!'))
+            case "auth/wrong-password":
+                return dispatch(authFail('Contraseña incorrecta!'))
+            case "auth/network-request-failed":
+                return dispatch(authFail('Error de conexión!'))
+            default:
+                return null
+        }
+    }
+}
+
 export const cleanErrors=()=>{
     return {
         type:actionTypes.CLEAN_ERRORS
@@ -44,11 +61,10 @@ export const auth=(email,password)=>{
         firebaseAuth.signInWithEmailAndPassword(email,password)
             .then(result=>{
 
-                dispatch(authSuccess(result.user))
+               dispatch(authSuccess(result.user))
             })
             .catch(error=>{
-
-                dispatch(authFail(error.message))
+                dispatch(handleSpanishError(error.code))
             })
             }
 }
@@ -59,9 +75,7 @@ export const ifUserChange=()=>{
             if(user){
             dispatch(updateUsuario(user))
             }
-            else{
-                dispatch(desloguear(false))
-            }
+
         })
     }
 }
