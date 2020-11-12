@@ -13,6 +13,7 @@ import ErrorMessage from "./UI/AlertMessages/ErrorMessage";
 import {Redirect} from "react-router";
 
 
+
 class StartPage extends Component {
     state={
         errorExist:false,
@@ -49,64 +50,66 @@ class StartPage extends Component {
         return(
             <>
                 {isAdmin}
-                <LateralBar
-                    user={false}
-                    show={this.state.mostrarLateral}
-                    informacion={this.state.informacion}
-                    handleInfoDoctor={()=>{
-                        this.handleDoctorServicios()
-                        this.setState({mostrarLateral:false})
-                    }}
+
+                    <LateralBar
+                        user={false}
+                        show={this.state.mostrarLateral}
+                        informacion={this.state.informacion}
+                        handleInfoDoctor={()=>{
+                            this.handleDoctorServicios()
+                            this.setState({mostrarLateral:false})
+                        }}
                     />
                     <NavigationBar
                     handleLateralBar={()=>this.setState({
-                        mostrarLateral:!this.state.mostrarLateral
-                    })}
+                    mostrarLateral:!this.state.mostrarLateral
+                })}
 
                     handleDoctor={this.handleDoctorServicios}
                     informacion={this.state.informacion}
                     brilla={this.state.mostrarLateral}
                     />
-                    {!this.state.mostrarForm ?
-                        <div className="Main">
-                        <Doctor
-                            show={this.state.doctor}
-                        />
+                {!this.state.mostrarForm ?
+                    <div className="Main">
+                    <Doctor
+                    show={this.state.doctor}
+                    />
 
-                        <Information
-                        show={this.state.doctor}
-                        />
+                    <Information
+                    show={this.state.doctor}
+                    />
 
-                        <InfoSolicitar
-                        handleShow={
-                        ()=> {this.setState({mostrarForm: true})}}
-                        />
-                        </div>
+                    <InfoSolicitar
+                    handleShow={
+                    ()=> {this.setState({mostrarForm: true})}}
+                    />
+                    </div>
 
-                        :
-                            <>
-                             <Backdrop show={this.state.showBackdrop}/>
-                             <Modal show={this.state.showBackdrop}>
-                                 {this.state.errorExist ?
-                                 <ErrorMessage
-                                     errorMensaje={this.state.errorMensaje}
-                                     Continuar={()=>this.setState({showBackdrop:false,errorExist:false,errorMensaje:""})}
-                                   /> :
-                                     <AceptarCitaCliente
-                                         Continuar={()=>this.setState({showBackdrop:false, mostrarForm:false})}/>
-                                 }
-                             </Modal>
-
-                        <Formulario
-                        handleError={(mensaje)=>this.setState({
-                            errorExist:true,showBackdrop:true,errorMensaje:mensaje})}
-                        handleCancelar={()=>this.setState({mostrarForm:false})}
-                        handleFinalizar={()=>this.setState({showBackdrop:true})}
-                        show={this.state.mostrarForm}
-                        />
-                        </>
-
+                    :
+                    <>
+                    <Backdrop show={this.state.showBackdrop}/>
+                    <Modal show={this.state.showBackdrop}>
+                    {this.state.errorExist ?
+                        <ErrorMessage
+                            errorMensaje={this.state.errorMensaje}
+                            Continuar={()=>this.setState({showBackdrop:false,errorExist:false,errorMensaje:""})}
+                        /> :
+                        <AceptarCitaCliente
+                            Continuar={()=>this.setState({showBackdrop:false, mostrarForm:false})}/>
                     }
+                    </Modal>
+
+                    <Formulario
+                    handleError={(mensaje)=>this.setState({
+                    errorExist:true,showBackdrop:true,errorMensaje:mensaje})}
+                    handleCancelar={()=>this.setState({mostrarForm:false})}
+                    handleFinalizar={()=>this.setState({showBackdrop:true})}
+                    show={this.state.mostrarForm}
+                    />
+                    </>
+
+                }
+
 
 
 
