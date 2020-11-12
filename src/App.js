@@ -6,11 +6,13 @@ import DoctorPage from "./components/AdministrarCitas/DoctorPage";
 import {connect} from 'react-redux'
 import * as actions from "./store/actions";
 
+
 const  App=(props)=> {
     useEffect(()=>{
-       props.onUpdateUser()
+       props.onUpdateUser();
+       props.onNet();
 
-    },[])
+    })
   return (
       <>
       <BrowserRouter>
@@ -28,7 +30,7 @@ const  App=(props)=> {
 
         <Switch>
       <Route path="/" exact>
-        <StartPage/>
+         <StartPage/>
       </Route>
         </Switch>
 
@@ -40,9 +42,12 @@ const  App=(props)=> {
 
 const mapDispatchToProps=dispatch=>{
     return {
-        onUpdateUser:()=>dispatch(actions.ifUserChange())
+        onUpdateUser:()=>dispatch(actions.ifUserChange()),
+        onNet:()=>dispatch(actions.onNetwork())
     }
 }
+
+
 
 
 export default connect(null,mapDispatchToProps)(App);
