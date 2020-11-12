@@ -65,7 +65,6 @@ class DoctorPage extends Component{
         })
     }
      AceptarCita= async (id)=>{
-
         const citaRef=firebase.database().ref('Citas').child(id)
         await citaRef.update({
             ok:true
@@ -83,12 +82,19 @@ class DoctorPage extends Component{
 
 
     CrearCita= async cita=>{
-        const citasRef=firebase.database().ref('Citas')
-        await citasRef.push(cita)
-        this.setState({
-            aceptandoCrear:true,
-            showBackdrop:true,
+
+        const dataRef= await firebase.database().ref('Citas/' + firebase.database().ref().child('Citas').push().key);
+        dataRef.set(cita,err=>{
+            if(err){
+                console.log(err)
+            }else{
+                this.setState({
+                    aceptandoCrear:true,
+                    showBackdrop:true,
+                })
+            }
         })
+
     }
     desloguear=()=>{
         this.props.onLogout()
@@ -150,6 +156,7 @@ class DoctorPage extends Component{
                 crearCita={this.state.crearCita}
                 />
                 <Citas
+                isConnected={this.props.isConnected}
                 handleError={mensaje=>this.setState({errorExist:true,showBackdrop:true,errorMensaje:mensaje})}
                 addCita={this.CrearCita}
                 citas={this.props.listaCitas}
@@ -168,7 +175,7 @@ class DoctorPage extends Component{
                          showBackdrop:true,
                         idSeleccionado:id
                     })
-                    console.log(id)}
+                    }
                 }
                 handleCrearCita={(cita)=>this.CrearCita(cita)}
                 />
@@ -184,7 +191,8 @@ const mapStateToProps=state=>{
         listaCitas:state.stateCitas.citas,
         user:state.stateAuth.user,
         onAuthSucces:state.stateAuth.authSuccess,
-        onAuthFail:state.stateAuth.authFail
+        onAuthFail:state.stateAuth.authFail,
+        isConnected:state.stateCitas.onNet
     }
 }
 

@@ -21,6 +21,7 @@ const Citas=(props)=>{
                         handleAceptarEliminar={props.handleAceptarEliminar}
                     /> :
                     <CrearCita
+                        isConnected={props.isConnected}
                         handleError={props.handleError}
                         addCita={props.addCita}
                         handleCrearCita={props.handleCrearCita}

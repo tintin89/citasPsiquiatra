@@ -12,7 +12,7 @@ const CrearCita = (props)=> {
     const [nombre,setNombre]=useState("")
     const [telefono,setTelefono]=useState("")
     const [fecha,setFecha]=useState("")
-    const [ok,setOk]=useState(true)
+
 
     const handleOnchangeNombre=e=>{
         setNombre(e.target.value)
@@ -31,16 +31,20 @@ const CrearCita = (props)=> {
           if (!nombre.match(/^[A-Z\s]*$/i) || !telefono.match(/^[0-9]*$/)) {
               props.handleError("Por favor complete los datos correctamente!")
           }else {
-              const cita={
-                  nombre:nombre,
-                  telefono:telefono,
-                  fecha:fecha.toLocaleString(),
-                  ok:true
+              if(!props.isConnected){
+                  props.handleError("No hay conexión con el servidor!")
+              }else {
+                  const cita = {
+                      nombre: nombre,
+                      telefono: telefono,
+                      fecha: fecha.toLocaleString(),
+                      ok: true
+                  }
+                  props.addCita(cita)
+                  setFecha("")
+                  setTelefono("")
+                  setNombre("")
               }
-              await props.addCita(cita)
-              setFecha("")
-              setTelefono("")
-              setNombre("")
           }
       }
 

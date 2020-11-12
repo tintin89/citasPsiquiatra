@@ -1,10 +1,12 @@
 import React from 'react'
 import Cita from './Cita'
+import {verificar} from './utilityMethods/methods'
 
 
 const CitasConfirmadas=(props)=>(
     <div className="Citas">
         {
+            verificar(props.citas,true) ?
             props.citas.map(c=>{
                 if(c.ok){
                     return <Cita
@@ -21,6 +23,8 @@ const CitasConfirmadas=(props)=>(
                 }
 
             })
+                : <p className="SinCitas">No hay citas confirmadas</p>
+
         }
     </div>
 )

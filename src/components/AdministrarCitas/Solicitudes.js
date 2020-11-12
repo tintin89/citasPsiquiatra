@@ -1,10 +1,18 @@
 import React from 'react'
 import Cita from './Cita'
+import {verificar} from "./utilityMethods/methods";
 
 
-const Solicitudes=(props)=>(
-    <div className="Citas">
+
+const Solicitudes=(props)=>{
+
+
+
+
+   return(
+       <div className="Citas">
         {
+            verificar(props.citas,false)?
             props.citas.map(c=>{
                 if(!c.ok){
                     return <Cita
@@ -21,8 +29,10 @@ const Solicitudes=(props)=>(
                     return null
                 }
             })
+                : <p className="SinCitas">No hay  solicitudes de cita</p>
         }
     </div>
-)
+   )
+}
 
 export default Solicitudes
