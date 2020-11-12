@@ -6,13 +6,13 @@ import es from 'date-fns/locale/es'
 import {registerLocale} from "react-datepicker"
 import firebase from '../../Firebase'
 import {FiUser,FiPhone} from 'react-icons/fi'
-
+import {connect} from 'react-redux'
 registerLocale('es',es)
 
 
 
 const Formulario =  (props) =>{
-       const [ok,setOk]= useState(false)
+
        const [nombre,setNombre]=useState("")
        const [telefono,setTelefono]=useState("")
        const [fecha,setFecha]=useState("")
@@ -40,15 +40,26 @@ const Formulario =  (props) =>{
             if (!nombre.match(/^[A-Z\s]*$/i) || !telefono.match(/^[0-9]*$/)) {
                 props.handleError("Por favor complete los datos correctamente!")
                }else {
+                if(!props.onConnected){
+                    props.handleError('No hay conexión con el servidor')
+                }else {
+
                     const cita = {
                         nombre: nombre,
                         telefono: telefono,
                         fecha: fecha.toLocaleString(),
-                        ok: ok
+                        ok: false
                     }
-                    const citasRef = firebase.database().ref('Citas')
-                    await citasRef.push(cita)
-                    props.handleFinalizar()
+                    const dataRef = await firebase.database().ref('Citas/' + firebase.database().ref().child('Citas').push().key);
+                    dataRef.set(cita, err => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            props.handleFinalizar()
+                        }
+                    })
+                }
+
                 }
             }
                }
@@ -95,7 +106,14 @@ const Formulario =  (props) =>{
 
         )
     }
-export default Formulario
+
+    const mapStateToProps=state=>{
+    return{
+        onConnected:state.stateCitas.onNet
+    }
+    }
+
+export default connect(mapStateToProps)(Formulario)
 
 
 
