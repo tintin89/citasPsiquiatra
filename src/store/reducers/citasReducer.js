@@ -2,7 +2,10 @@ import * as actionTypes from '../actions/actionTypes'
 
 
 const initialState={
-    citas:[]
+    citas:[],
+    error:"",
+    onNet:true,
+    loading:false
 }
 
 const citasReducer=(state=initialState, action)=>{
@@ -13,6 +16,12 @@ const citasReducer=(state=initialState, action)=>{
                       ...state,
                      citas:action.citas
 
+               }
+
+           case actionTypes.UPDATE_NETWORK:
+               return {
+                   ...state,
+                   onNet: action.isConnected
                }
 
            default:
