@@ -58,7 +58,8 @@ const Formulario =  (props) =>{
                         nombre: nombre,
                         telefono: telefono,
                         fecha: moment(fecha).format('DD MMMM YYYY,h:mm a'),
-                        ok: false
+                        ok: false,
+                        fechaT:Math.floor(fecha/1000)
                     }
                     const dataRef = await firebase.database().ref('Citas/' + firebase.database().ref().child('Citas').push().key);
                     dataRef.set(cita, err => {
