@@ -1,9 +1,8 @@
 import React, {useState} from 'react'
 import DatePicker from "react-datepicker";
-import es from 'date-fns/locale/es'
-import {registerLocale} from "react-datepicker"
 import {FiUser,FiPhone} from 'react-icons/fi'
-registerLocale('es',es)
+import moment from 'moment'
+import 'moment/locale/es'
 
 
 
@@ -24,6 +23,7 @@ const CrearCita = (props)=> {
 
   const  handleSubmit= async e=>{
         e.preventDefault()
+        moment.locale('es')
       if(nombre===""||telefono===""||fecha===""||fecha===null){
           props.handleError("Por favor complete todos los datos!")
       }else {
@@ -37,7 +37,7 @@ const CrearCita = (props)=> {
                   const cita = {
                       nombre: nombre,
                       telefono: telefono,
-                      fecha: fecha.toLocaleString(),
+                      fecha: moment(fecha).format('DD MMMM YYYY,h:mm a'),
                       ok: true
                   }
                   props.addCita(cita)
@@ -72,11 +72,10 @@ const CrearCita = (props)=> {
 
                      <DatePicker
                          placeholderText="Fecha y Hora"
-                         locale="es"
                          showTimeSelect
                          timeIntervals={60}
                          timeCaption="Hora"
-                         dateFormat="dd/MM/yyyy h:mm aa"
+                         dateFormat="dd/MM/yyyy h:mm a"
                          minDate={new Date()}
                          selected={fecha}
                          onChange={date => setFecha(date)}/>
