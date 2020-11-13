@@ -18,12 +18,15 @@ export const updateNetwork = (valor)=>{
 export const getCitas= () => {
     return dispatch => {
         const citasRef = firebase.database().ref('Citas')
+
         citasRef.on('value', (snapshot) => {
                 const citasDb = snapshot.val()
                 const citas = []
                 for (let id in citasDb) {
                     citas.push({id, ...citasDb[id]})
                 }
+
+
                 dispatch(updateCitas(citas))
 
             }
