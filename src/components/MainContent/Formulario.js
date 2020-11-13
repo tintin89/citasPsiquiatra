@@ -2,22 +2,32 @@ import React,{useState} from "react"
 import "../../styles.css"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import es from 'date-fns/locale/es'
-import {registerLocale} from "react-datepicker"
 import firebase from '../../Firebase'
 import {FiUser,FiPhone} from 'react-icons/fi'
 import {connect} from 'react-redux'
-registerLocale('es',es)
+import moment from 'moment'
+import 'moment/locale/es'
+
+
 
 
 
 const Formulario =  (props) =>{
-
        const [nombre,setNombre]=useState("")
        const [telefono,setTelefono]=useState("")
        const [fecha,setFecha]=useState("")
 
 
+    const isWeekday = date => {
+           const day = date.getDay();
+           return day !==0 && day!==6
+    }
+
+    const addDays=(date,days)=>{
+           const resultado=new Date(date)
+           resultado.setDate(resultado.getDate() + days)
+           return resultado
+    }
 
 
 
@@ -32,7 +42,7 @@ const Formulario =  (props) =>{
 
       const  handleSubmit= async e=>{
           e.preventDefault()
-
+          moment.locale('es')
             if(nombre===""||telefono===""||fecha===""||fecha===null){
              props.handleError("Por favor complete todos los datos!")
             }else {
@@ -47,7 +57,7 @@ const Formulario =  (props) =>{
                     const cita = {
                         nombre: nombre,
                         telefono: telefono,
-                        fecha: fecha.toLocaleString(),
+                        fecha: moment(fecha).format('DD MMMM YYYY,h:mm a'),
                         ok: false
                     }
                     const dataRef = await firebase.database().ref('Citas/' + firebase.database().ref().child('Citas').push().key);
@@ -84,13 +94,23 @@ const Formulario =  (props) =>{
 
                 <DatePicker
                     placeholderText="Fecha y Hora"
-                    locale="es"
                     showTimeSelect
                     timeIntervals={60}
                     timeCaption="Hora"
-                    dateFormat="dd/MM/yyyy h:mm aa"
                     selected={fecha}
-                    minDate={new Date()}
+                    dateFormat="dd/MM/yyyy h:mm a"
+                    minDate={addDays(new Date(),1)}
+                    filterDate={isWeekday}
+                    includeTimes={[
+                        new Date().setHours(8,0,0),
+                        new Date().setHours(9,0,0),
+                        new Date().setHours(10,0,0),
+                        new Date().setHours(11,0,0),
+                        new Date().setHours(14,0,0),
+                        new Date().setHours(15,0,0),
+                        new Date().setHours(16,0,0),
+
+                    ]}
                     onChange={date=>setFecha(date)}/>
 
 
