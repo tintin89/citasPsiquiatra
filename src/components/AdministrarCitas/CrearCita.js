@@ -38,7 +38,8 @@ const CrearCita = (props)=> {
                       nombre: nombre,
                       telefono: telefono,
                       fecha: moment(fecha).format('DD MMMM YYYY,h:mm a'),
-                      ok: true
+                      ok: true,
+                      fechaT:Math.floor(fecha/1000)
                   }
                   props.addCita(cita)
                   setFecha("")
