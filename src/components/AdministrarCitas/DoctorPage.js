@@ -15,78 +15,92 @@ import {withRouter} from "react-router";
 import ErrorMessage from "../UI/AlertMessages/ErrorMessage";
 
 
-class DoctorPage extends Component{
-    state={
-        errorMensaje:"",
-        errorExist:false,
-        aceptandoCrear:false,
-        admin:true,
-        aceptandoEliminar:false,
-        idSeleccionado:null,
-        aceptandoSolicitud:false,
-        showBackdrop:false,
-        solicitudes:true,
-        citasConfirmadas:false,
-        crearCita:false,
-        lateralbar:false,
+class DoctorPage extends Component {
+    state = {
+        errorMensaje: "",
+        errorExist: false,
+        aceptandoCrear: false,
+        admin: true,
+        aceptandoEliminar: false,
+        idSeleccionado: null,
+        aceptandoSolicitud: false,
+        showBackdrop: false,
+        solicitudes: true,
+        citasConfirmadas: false,
+        crearCita: false,
+        lateralbar: false,
     }
 
 
-
-
-
-   componentDidMount() {
+    componentDidMount() {
         this.props.onGetCitas()
-   }
+    }
 
 
-    handleSolicitudes=()=>{
-        if(this.state.lateralbar){this.setState({lateralbar:false})}
+    handleSolicitudes = () => {
+        if (this.state.lateralbar) {
+            this.setState({lateralbar: false})
+        }
         this.setState({
-            solicitudes:true,
-            citasConfirmadas:false,
-            crearCita:false
+            solicitudes: true,
+            citasConfirmadas: false,
+            crearCita: false
         })
     }
-    handleCitasConfirmadas=()=>{
-        if(this.state.lateralbar){this.setState({lateralbar:false})}
-            this.setState({
-                solicitudes:false,
-                citasConfirmadas:true,
-                crearCita:false
-            })
-    }
-    handleCrearCita=()=>{
-        if(this.state.lateralbar){this.setState({lateralbar:false})}
+    handleCitasConfirmadas = () => {
+        if (this.state.lateralbar) {
+            this.setState({lateralbar: false})
+        }
         this.setState({
-            solicitudes:false,
-            citasConfirmadas:false,
-            crearCita:true
+            solicitudes: false,
+            citasConfirmadas: true,
+            crearCita: false
         })
     }
-     AceptarCita= async (id)=>{
-        const citaRef=firebase.database().ref('Citas').child(id)
-        await citaRef.update({
-            ok:true
+    handleCrearCita = () => {
+        if (this.state.lateralbar) {
+            this.setState({lateralbar: false})
+        }
+        this.setState({
+            solicitudes: false,
+            citasConfirmadas: false,
+            crearCita: true
         })
-         this.setState({aceptandoSolicitud:false,showBackdrop:false})
     }
-     handleEliminar= async (id)=>{
+    AceptarCita =  (id) => {
+        const citaRef =  firebase.database().ref('Citas').child(id)
+         citaRef.update({
+            ok: true
+        },(error)=>{
+             if(!error){
+                 this.setState({aceptandoSolicitud: false, showBackdrop: false})
+             }
+
+             else{
+                 this.setState({errorExist:true,showBackdrop:true,errorMensaje:error.message})
+             }
+
+         }
+
+         )
+}
+
+     handleEliminar= (id)=>{
 
         const citaRef=firebase.database().ref('Citas').child(id)
-       await citaRef.remove()
-         this.setState({aceptandoEliminar:false,showBackdrop:false})
+        citaRef.remove().then(()=>this.setState({aceptandoEliminar:false,showBackdrop:false}))
+            .catch(error=>this.setState({errorExist:true,showBackdrop:true,errorMensaje:error.message}))
 
 
     }
 
 
-    CrearCita= async cita=>{
+    CrearCita= cita=>{
 
-        const dataRef= await firebase.database().ref('Citas/' + firebase.database().ref().child('Citas').push().key);
+        const dataRef= firebase.database().ref('Citas/' + firebase.database().ref().child('Citas').push().key);
         dataRef.set(cita,err=>{
             if(err){
-                console.log(err)
+                this.setState({errorExist:true,showBackdrop:true,errorMensaje:err.message})
             }else{
                 this.setState({
                     aceptandoCrear:true,
@@ -159,22 +173,34 @@ class DoctorPage extends Component{
                 isConnected={this.props.isConnected}
                 handleError={mensaje=>this.setState({errorExist:true,showBackdrop:true,errorMensaje:mensaje})}
                 addCita={this.CrearCita}
-                citas={this.props.listaCitas}
+                citas={this.props.listaCitas.sort((a,b)=>{return a.fechaT-b.fechaT})}
                 solicitudes={this.state.solicitudes}
                 citasConfirmadas={this.state.citasConfirmadas}
                 crearCita={this.state.crearCita}
                 handleCitasConfirmadas={this.handleCitasConfirmadas}
-                handleAceptarEliminar={(id)=>this.setState({
+                handleAceptarEliminar={(id)=>{
+                    if(!this.props.isConnected){
+                    this.setState({errorExist:true,showBackdrop:true,errorMensaje:"No hay conexión con el servidor"})
+                }else{
+                    this.setState({
                     idSeleccionado:id,
                     aceptandoEliminar:true,
                     showBackdrop:true
-                })}
+                })
+                }
+                    }}
                 handleAceptarCita={
-                    (id)=>{this.setState({
-                         aceptandoSolicitud:true,
-                         showBackdrop:true,
-                        idSeleccionado:id
-                    })
+                    (id)=>{
+                        if(!this.props.isConnected){
+                            this.setState({errorExist:true,showBackdrop:true,errorMensaje:"No hay conexión con el servidor"})
+                        }else{
+                            this.setState({
+                                aceptandoSolicitud:true,
+                                showBackdrop:true,
+                                idSeleccionado:id
+                            })
+                        }
+
                     }
                 }
                 handleCrearCita={(cita)=>this.CrearCita(cita)}
