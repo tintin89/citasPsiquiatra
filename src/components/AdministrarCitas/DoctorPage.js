@@ -13,6 +13,7 @@ import * as actions from "../../store/actions/index";
 import {Redirect} from "react-router";
 import {withRouter} from "react-router";
 import ErrorMessage from "../UI/AlertMessages/ErrorMessage";
+import Loader from "../UI/Loader/Loader";
 
 
 class DoctorPage extends Component {
@@ -33,7 +34,8 @@ class DoctorPage extends Component {
 
 
     componentDidMount() {
-        this.props.onGetCitas()
+        this.props.onGetCitas();
+
     }
 
 
@@ -169,42 +171,46 @@ class DoctorPage extends Component {
                 citasConfirmadas={this.state.citasConfirmadas}
                 crearCita={this.state.crearCita}
                 />
-                <Citas
-                isConnected={this.props.isConnected}
-                handleError={mensaje=>this.setState({errorExist:true,showBackdrop:true,errorMensaje:mensaje})}
-                addCita={this.CrearCita}
-                citas={this.props.listaCitas.sort((a,b)=>{return a.fechaT-b.fechaT})}
-                solicitudes={this.state.solicitudes}
-                citasConfirmadas={this.state.citasConfirmadas}
-                crearCita={this.state.crearCita}
-                handleCitasConfirmadas={this.handleCitasConfirmadas}
-                handleAceptarEliminar={(id)=>{
-                    if(!this.props.isConnected){
-                    this.setState({errorExist:true,showBackdrop:true,errorMensaje:"No hay conexión con el servidor"})
-                }else{
-                    this.setState({
-                    idSeleccionado:id,
-                    aceptandoEliminar:true,
-                    showBackdrop:true
-                })
-                }
-                    }}
-                handleAceptarCita={
-                    (id)=>{
-                        if(!this.props.isConnected){
-                            this.setState({errorExist:true,showBackdrop:true,errorMensaje:"No hay conexión con el servidor"})
-                        }else{
-                            this.setState({
-                                aceptandoSolicitud:true,
-                                showBackdrop:true,
-                                idSeleccionado:id
-                            })
-                        }
+                {
+                    this.props.cargandoCitas ? <Loader/>
+                    :
+                        <Citas
+                            isConnected={this.props.isConnected}
+                            handleError={mensaje=>this.setState({errorExist:true,showBackdrop:true,errorMensaje:mensaje})}
+                            addCita={this.CrearCita}
+                            citas={this.props.listaCitas.sort((a,b)=>{return a.fechaT-b.fechaT})}
+                            solicitudes={this.state.solicitudes}
+                            citasConfirmadas={this.state.citasConfirmadas}
+                            crearCita={this.state.crearCita}
+                            handleCitasConfirmadas={this.handleCitasConfirmadas}
+                            handleAceptarEliminar={(id)=>{
+                                if(!this.props.isConnected){
+                                    this.setState({errorExist:true,showBackdrop:true,errorMensaje:"No hay conexión con el servidor"})
+                                }else{
+                                    this.setState({
+                                        idSeleccionado:id,
+                                        aceptandoEliminar:true,
+                                        showBackdrop:true
+                                    })
+                                }
+                            }}
+                            handleAceptarCita={
+                                (id)=>{
+                                    if(!this.props.isConnected){
+                                        this.setState({errorExist:true,showBackdrop:true,errorMensaje:"No hay conexión con el servidor"})
+                                    }else{
+                                        this.setState({
+                                            aceptandoSolicitud:true,
+                                            showBackdrop:true,
+                                            idSeleccionado:id
+                                        })
+                                    }
 
-                    }
+                                }
+                            }
+                            handleCrearCita={(cita)=>this.CrearCita(cita)}
+                        />
                 }
-                handleCrearCita={(cita)=>this.CrearCita(cita)}
-                />
 
             </>
         )
@@ -216,9 +222,8 @@ const mapStateToProps=state=>{
     return {
         listaCitas:state.stateCitas.citas,
         user:state.stateAuth.user,
-        onAuthSucces:state.stateAuth.authSuccess,
-        onAuthFail:state.stateAuth.authFail,
-        isConnected:state.stateCitas.onNet
+        isConnected:state.stateCitas.onNet,
+        cargandoCitas:state.stateCitas.loading
     }
 }
 
@@ -226,6 +231,7 @@ const mapDispatchToProps=dispatch=>{
     return {
         onGetCitas:()=>dispatch(actions.getCitas()),
         onLogout:()=>dispatch(actions.userlogout())
+
     }
 }
 
