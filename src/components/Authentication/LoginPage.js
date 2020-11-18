@@ -85,7 +85,6 @@ const mapStateToProps=state=>{
     return{
         cargando:state.stateAuth.cargando,
         user:state.stateAuth.user,
-        onAuthFail:state.stateAuth.authFail,
         errorMensaje:state.stateAuth.error,
         authFail:state.stateAuth.authFail
     }
