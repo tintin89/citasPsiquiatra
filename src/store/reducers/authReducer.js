@@ -5,7 +5,6 @@ const initialState={
     cargando:false,
     user:null,
     userExist:false,
-    authSuccess:false,
     authFail:false,
     error:""
 }
@@ -15,7 +14,6 @@ const authReducer=(state=initialState, action)=>{
         case actionTypes.AUTH_SUCCESS:
             return {
                 ...state,
-                authSuccess:true,
                 cargando:false,
                 user:{...action.user},
                 userExist: true
@@ -35,12 +33,17 @@ const authReducer=(state=initialState, action)=>{
                 cargando:true
             }
 
+        case actionTypes.AUTH_END:
+            return {
+                ...state,
+                cargando:false
+            }
+
 
         case actionTypes.UPDATE_USER:
             return {
                 ...state,
                 user:{...action.userData},
-                authSuccess:true,
                 userExist: true
             }
 
@@ -48,7 +51,6 @@ const authReducer=(state=initialState, action)=>{
             return {
                 ...state,
                 userExist:action.areUser,
-                authSuccess: false,
                 user: null
             }
 

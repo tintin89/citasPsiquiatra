@@ -24,6 +24,12 @@ const citasReducer=(state=initialState, action)=>{
                    onNet: action.isConnected
                }
 
+           case actionTypes.LOADING_CITAS:
+               return {
+                   ...state,
+                   loading:action.isLoading
+               }
+
            default:
                return state
        }
