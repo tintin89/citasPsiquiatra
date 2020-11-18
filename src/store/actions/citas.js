@@ -8,6 +8,15 @@ export const updateCitas = (citasList)=>{
     }
 }
 
+export const LoadingCitas = (valor)=>{
+    return {
+        type:actionTypes.LOADING_CITAS,
+        isLoading:valor
+    }
+}
+
+
+
 export const updateNetwork = (valor)=>{
     return {
         type:actionTypes.UPDATE_NETWORK,
@@ -17,6 +26,7 @@ export const updateNetwork = (valor)=>{
 
 export const getCitas= () => {
     return dispatch => {
+        dispatch(LoadingCitas(true))
         const citasRef = firebase.database().ref('Citas')
 
         citasRef.on('value', (snapshot) => {
@@ -28,9 +38,13 @@ export const getCitas= () => {
 
 
                 dispatch(updateCitas(citas))
+                dispatch(LoadingCitas(false))
 
             }
-            ,error=>console.log(error))
+            ,error=>{
+            console.log(error)
+            dispatch(LoadingCitas(false))
+        })
     }
 }
 

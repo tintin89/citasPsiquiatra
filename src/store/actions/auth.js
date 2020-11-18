@@ -16,6 +16,14 @@ export const authStart=()=>{
     }
 }
 
+export const authEnd=()=>{
+    return {
+        type:actionTypes.AUTH_END
+    }
+}
+
+
+
 
 export const authFail=(errorMensaje)=>{
     return {
@@ -60,7 +68,6 @@ export const auth=(email,password)=>{
           dispatch(authStart())
         firebaseAuth.signInWithEmailAndPassword(email,password)
             .then(result=>{
-
                dispatch(authSuccess(result.user))
             })
             .catch(error=>{
@@ -71,12 +78,13 @@ export const auth=(email,password)=>{
 
 export const ifUserChange=()=>{
     return dispatch=>{
+        dispatch(authStart())
         firebaseAuth.onAuthStateChanged(user=>{
             if(user){
             dispatch(updateUsuario(user))
             }
-
-        })
+            dispatch(authEnd())
+             },error=>dispatch(authEnd()))
     }
 }
 

@@ -1,5 +1,7 @@
 
 export const UPDATE_CITAS ='UPDATE_CITAS'
+export const LOADING_CITAS='LOADING_CITAS'
+
 
 
 
@@ -8,5 +10,6 @@ export const AUTH_FAIL='AUTH_FAIL'
 export const UPDATE_USER='UPDATE_USER'
 export const UPDATE_USER_LOGOUT='UPDATE_USER_LOGOUT'
 export const AUTH_START='AUTH_START'
+export const AUTH_END='AUTH_END'
 export const CLEAN_ERRORS='CLEAN_ERRORS'
 export const UPDATE_NETWORK='UPDATE_NETWORK'
